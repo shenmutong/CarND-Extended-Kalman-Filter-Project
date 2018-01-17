@@ -36,6 +36,24 @@ FusionEKF::FusionEKF() {
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
+  //init 4D state vector
+  x_ = VectorXd(4);
+
+  //state covariance matrix P
+  P_ = MatrixXd(4, 4);
+	.P_ << 1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1000, 0,
+    0, 0, 0, 1000;
+
+  //the initial transition matrix F_
+	.F_ = MatrixXd(4, 4);
+	.F_ << 1, 0, 1, 0,
+    0, 1, 0, 1,
+    0, 0, 1, 0,
+    0, 0, 0, 1;
+
+  Q_ = MatriXd(4,4);
 
 
 }
@@ -105,8 +123,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
+    efk_.Update(measurement_pack.raw_measurements_);
+    
   } else {
     // Laser updates
+    efk_.UpdateEKF(measurement_pack.raw_measurements_);
   }
 
   // print the output
