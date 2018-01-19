@@ -57,12 +57,10 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   float pxy_3_2 = pxy * pxy_sqrt;
 
 	//check division by zero
-	if(pxy < 0.00001){
-    return Hj;
+  if(fabs(pxy) < 0.0001){
+      return Hj;
 	}
-	
 
-	
 	//compute the Jacobian matrix
   Hj << px/pxy_sqrt,py/pxy_sqrt,0,0,
     px/pxy, py/pxy,0,0,
