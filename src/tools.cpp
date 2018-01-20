@@ -53,7 +53,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	float vy = x_state(3);
 
 	float pxy = px*px + py* py;
-	float pxy_sqrt = sqrt(pxy); 
+	float pxy_sqrt = sqrtf(pxy); 
   float pxy_3_2 = pxy * pxy_sqrt;
 
 	//check division by zero

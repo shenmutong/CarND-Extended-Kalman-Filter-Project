@@ -100,7 +100,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       /**
       Initialize state.
       */
-      x<<  measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1],1,1;
+      x<<  measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1],5,3;
     }
     ekf_.Init(x,
               P_,
@@ -170,7 +170,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
     Hj_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.H_ = Hj_;
     ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-    cout<< "RADAR :the raw_measurements is :" << measurement_pack.raw_measurements_[2] << endl;
+    //cout<< "RADAR :the raw_measurements is :" << measurement_pack.raw_measurements_[2] << endl;
   } else {
     // Laser updates
 

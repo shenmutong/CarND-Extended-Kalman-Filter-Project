@@ -56,7 +56,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float vx = x_[2];
   float vy = x_[3];
 
-  float pxy_sqrt = sqrt( px*px+py*py);
+  float pxy_sqrt = sqrtf( px*px+py*py);
   float rho =  pxy_sqrt;
   float phi = 0;
   float rho_dot = 0;
@@ -66,48 +66,46 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   //cout<<"phi =" <<phi <<endl;
 
 
-
-  if(fabs(px) == 0){
-    if( py >0){
-      phi = M_PI/2;
-    }else if(py <0){
-     phi = -M_PI / 2 ;
-    }else{
-      phi =0;
-    }
-  }else{
-    if(px>0 && py >0){
-      phi = atan2(py,px);
-    }else if(px <0 && py >0){
-      phi = M_PI -atan2(py, -px) ;
-    }else if (px <0 && py <0){
-      phi = -(M_PI -atan2(-py , -px));
-    }else{
-      phi = atan2(py , px);
-    }
-  }
-
   
+  //if(fabs(px) == 0){
+  //if( py >0){
+  //   phi = M_PI/2;
+  // }else if(py <0){
+  //  phi = -M_PI / 2 ;
+  // }else{
+  //   phi =0;
+  // }
+    //}else{
+
+    //if(px>0 && py >0){
+    //   phi = atan2(py,px);
+    //}else if(px <0 && py >0){
+    //  phi = M_PI -atan2(py, -px) ;
+    //}else if (px <0 && py <0){
+    //  phi = -(M_PI -atan2(-py , -px));
+    //}else{
+    //  phi = atan2(py , px);
+    //}
+    //}
+
+  phi = atan2(py,px);
+  while(phi > M_PI){
+    phi -= 2.* M_PI;
+  }
+  while(phi < -M_PI){
+    phi += 2.*M_PI;
+  }
 
   if(fabs(pxy_sqrt)  != 0){
     rho_dot = (px * vx + py * vy)/pxy_sqrt;
   }else{
     cout << "pxy_sqrt == 0" <<endl;
-    rho_dot = z[2] - 0.001;
+    rho_dot = z[2];
   }
-  cout<<"rho_dot =" <<rho_dot <<endl;
   h<< rho,phi,rho_dot;
   //std::cout << "h =  " <<h<<endl;
   //std::cout << "z =  " <<z<<endl;
       
-
-
-  //  if(0< px < 0.0001){
-  //px = 0.0001;
-  // }else if(0 > px > -0.0001){
-  // px = -0.0001;
-  //}
-
 
   VectorXd y = z - h;
 
