@@ -76,9 +76,9 @@ int main()
                         meas_package.raw_measurements_ << px, py;
                         iss >> timestamp;
                         meas_package.timestamp_ = timestamp;
-                        continue;
+
                     } else if (sensor_type.compare("R") == 0) {
-                        
+
                         meas_package.sensor_type_ = MeasurementPackage::RADAR;
                         meas_package.raw_measurements_ = VectorXd(3);
                         float ro;
@@ -127,9 +127,6 @@ int main()
                     
                     VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
-                    if(RMSE(0) >1){
-                      cout << "px"<< p_x <<"py"<<p_y<<"v1"<<v1<<"v2"<<v2 <<endl;
-                    }
                     json msgJson;
                     msgJson["estimate_x"] = p_x;
                     msgJson["estimate_y"] = p_y;
