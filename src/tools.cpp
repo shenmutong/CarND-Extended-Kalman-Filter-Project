@@ -63,7 +63,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 	//compute the Jacobian matrix
   Hj << px/pxy_sqrt,py/pxy_sqrt,0,0,
-    px/pxy, py/pxy,0,0,
+    -py/pxy, px/pxy,0,0,
     py*(vx*py - vy*px)/pxy_3_2,px*(vy*px - vx*py)/pxy_3_2,px/pxy_sqrt,py/pxy_sqrt;
 	return Hj;
 }

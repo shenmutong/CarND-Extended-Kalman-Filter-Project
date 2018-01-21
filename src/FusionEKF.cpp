@@ -92,7 +92,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       //float vx = rho_dot * cosf(phi);
       // float vy = rho_dot * sinf(phi);
       //      cout << "rho" << rho << "phi" << phi <<"rho_dot"<<rho_dot<<endl;
-      x <<  px,py,1,1;
+      x <<  px,py,0,0;
       // Hj_ = tools.CalculateJacobian(x);
 
     }
@@ -100,7 +100,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       /**
       Initialize state.
       */
-      x<<  measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1],5,3;
+      x<<  measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1],0,0;
     }
     ekf_.Init(x,
               P_,

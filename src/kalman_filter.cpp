@@ -34,12 +34,13 @@ void KalmanFilter::Update(const VectorXd &z) {
     * update the state by using Kalman Filter equations
   */
   VectorXd y = (z - H_ *x_);
-  MatrixXd s = H_ * P_ * H_.transpose() +R_;
-  MatrixXd k = P_ * H_.transpose() * s.inverse();
+  CommonUpdate(y);
+  //MatrixXd s = H_ * P_ * H_.transpose() +R_;
+  //MatrixXd k = P_ * H_.transpose() * s.inverse();
   // new state
-  x_ = x_+ (k *y);
-  MatrixXd I_ = MatrixXd::Identity(x_.size(),x_.size());
-  P_ = (I_ -k*H_) * P_;
+  //x_ = x_+ (k *y);
+  //MatrixXd I_ = MatrixXd::Identity(x_.size(),x_.size());
+  //P_ = (I_ -k*H_) * P_;
   //std::cout << "x=" << std::endl <<  x << std::endl;
   //std::cout << "P=" << std::endl <<  P << std::endl;
 }
@@ -89,12 +90,13 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     //}
 
   phi = atan2(py,px);
+  /*
   while(phi > M_PI){
     phi -= 2.* M_PI;
   }
   while(phi < -M_PI){
     phi += 2.*M_PI;
-  }
+    }*/
 
   if(fabs(pxy_sqrt)  != 0){
     rho_dot = (px * vx + py * vy)/pxy_sqrt;
@@ -106,17 +108,34 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   //std::cout << "h =  " <<h<<endl;
   //std::cout << "z =  " <<z<<endl;
       
-
   VectorXd y = z - h;
-
+  NormalizeAngle(y[1]);
+  CommonUpdate(y);
   std::cout << "y_ = " << y << endl;
-  MatrixXd s = H_ * P_ * H_.transpose() +R_;
-  MatrixXd k = P_ * H_.transpose() * s.inverse();
+  //MatrixXd s = H_ * P_ * H_.transpose() +R_;
+  //MatrixXd k = P_ * H_.transpose() * s.inverse();
   // new state
-  x_ = x_+ (k *y);
-  cout<<"x="<< x_ <<endl;
-  MatrixXd I_ = MatrixXd::Identity(x_.size(),x_.size());
-  P_ = (I_ -k*H_) * P_;
+  //x_ = x_+ (k *y);
+  //cout<<"x="<< x_ <<endl;
+  // MatrixXd I_ = MatrixXd::Identity(x_.size(),x_.size());
+  ///P_ -= K * H_ * P_;
+  //P_ = (I_ -k*H_) * P_;
 
+}
+
+void KalmanFilter::NormalizeAngle(double & phi)
+{
+  phi = atan2(sin(phi),cos(phi));
+}
+
+void KalmanFilter::CommonUpdate(const VectorXd& y){
+  
+  
+  const MatrixXd PHt = P_ * H_.transpose();
+  const MatrixXd S = H_ * PHt + R_;
+  const MatrixXd K = PHt * S.inverse();
+
+  x_ += K * y;
+  P_ -= K * H_ * P_;
 }
 

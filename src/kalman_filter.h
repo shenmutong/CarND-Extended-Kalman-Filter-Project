@@ -63,6 +63,15 @@ public:
    * @param z The measurement at k+1
    */
   void UpdateEKF(const Eigen::VectorXd &z);
+
+  /**
+   * Common Update
+   */
+  void CommonUpdate(const Eigen::VectorXd& y);
+  /*
+   * normailize angle
+   */
+  void NormalizeAngle(double & phi);
 };
 
 #endif /* KALMAN_FILTER_H_ */
